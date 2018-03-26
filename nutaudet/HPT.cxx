@@ -124,6 +124,11 @@ void Hpt::SetDesign(Int_t Design)
   fDesign = Design;
 }
 
+void Hpt::SetSurroundingDetHeight(Double_t height)
+{ 
+ fSRHeight = height;
+}
+
 // -----   Private method InitMedium 
 Int_t Hpt::InitMedium(const char* name)
 {
@@ -194,6 +199,7 @@ void Hpt::ConstructGeometry()
     //Trackers that in design 3 follow the target --------------------------------------------------------------------------------------    
     TGeoVolume *volMagRegion=gGeoManager->GetVolume("volMagRegion"); 
     TGeoVolume *volTarget =gGeoManager->GetVolume("volTarget");
+    TGeoVolume *tTauNuDet = gGeoManager->GetVolume("tTauNuDet");  
 
     Double_t DZMagnetizedRegion = ((TGeoBBox*) volMagRegion->GetShape())->GetDZ() *2;  
     Double_t DYMagnetizedRegion = ((TGeoBBox*) volMagRegion->GetShape())->GetDY() *2;  
@@ -208,21 +214,24 @@ void Hpt::ConstructGeometry()
 
    
    
-    TGeoBBox *Kraft = new TGeoBBox("Kraft",DXMagnetizedRegion/2., 10*cm, DZMagnetizedRegion/2.);
-    TGeoVolume *volKraft = new TGeoVolume("volKraft", Kraft, HPTmat);
-    AddSensitiveVolume(volKraft);
-    volKraft->SetLineColor(kMagenta);
-    volMagRegion->AddNode(volKraft, 1, new TGeoTranslation(0.,-DYMagnetizedRegion/2+10*cm,0.));
-    volMagRegion->AddNode(volKraft, 2, new TGeoTranslation(0.,+DYMagnetizedRegion/2-10*cm,0.));
- 
-    Double_t distTTtoHPT = 25 *cm; //distance from last TT to HPT
-
+    TGeoBBox *Surroundingdet = new TGeoBBox("Surroundingdet",DXMagnetizedRegion/2., fSRHeight/2, DZMagnetizedRegion/2.);
+    TGeoVolume *volSurroundingdet = new TGeoVolume("volSurroundingdet",Surroundingdet, HPTmat);
+    AddSensitiveVolume(volSurroundingdet);
+    volSurroundingdet->SetLineColor(kBlue);
+    volMagRegion->AddNode(volSurroundingdet, 1, new TGeoTranslation(0.,-DYMagnetizedRegion/2+fSRHeight/2,0.));
+    volMagRegion->AddNode(volSurroundingdet, 2, new TGeoTranslation(0.,+DYMagnetizedRegion/2-fSRHeight/2,0.));
+    tTauNuDet->AddNode(volSurroundingdet,3, new TGeoTranslation(0,-340*cm/2-fSRHeight/2, -3031));
+    tTauNuDet->AddNode(volSurroundingdet,4, new TGeoTranslation(0,+340*cm/2+fSRHeight/2, -3031));
+  
     Int_t n = 0;
+    Int_t fnTarget = 2;
     for(int i=0;i<fnHPT;i++){
 	  {
-           volMagRegion->AddNode(volDT,i,new TGeoTranslation(0,0, -DZMagnetizedRegion/2 + DZTarget + DimZ/2 + distTTtoHPT + i*(fDistance+DimZ)));
-           volMagRegion->AddNode(volDT,i+fnHPT,new TGeoTranslation(0,0, -DZMagnetizedRegion/2 + DZTarget + distTTtoHPT + (fnHPT-1)*fDistance + DZTarget + fnHPT * DimZ + i*(fDistance+DimZ) + DimZ/2));
+           for (int j = 0; j < fnTarget; j++){
+           volMagRegion->AddNode(volDT,i+j*fnHPT,new TGeoTranslation(0,0, -DZMagnetizedRegion/2 + DZTarget + DimZ/2 + i*(fDistance+DimZ) + j*(DZTarget+ fnHPT * DimZ + (fnHPT-1)*fDistance)));
+           //volMagRegion->AddNode(volDT,i+fnHPT,new TGeoTranslation(0,0, -DZMagnetizedRegion/2 + DZTarget + (fnHPT-1)*fDistance + DZTarget + fnHPT * DimZ + i*(fDistance+DimZ) + DimZ/2));
           // volMagRegion->AddNode(volDT,i,new TGeoTranslation(0,0, DimZ/2 + distTTtoHPT + i*(fDistance+DimZ)));	              
+           }
 	  }
      }
     }

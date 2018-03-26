@@ -30,6 +30,7 @@ class Hpt:public FairDetector
     //methods for design 3 
     void SetDistanceHPTs(Double_t dd);       
     void SetHPTNumber(Int_t nHPT);
+    void SetSurroundingDetHeight(Double_t height);
     //
     /**      Initialization of the detector is done here    */
     virtual void Initialize();
@@ -104,6 +105,7 @@ protected:
     Double_t fConcreteY;
     Double_t fConcreteZ;
 
+    Double_t fSRHeight;
     Double_t fDesign;
     Double_t fDistance;
     Int_t fnHPT;
