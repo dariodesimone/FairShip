@@ -331,10 +331,8 @@ void Target::ConstructGeometry()
       if(fDesign==3){        
         TGeoVolume *volMagRegion=gGeoManager->GetVolume("volMagRegion");
         Double_t ZDimMagnetizedRegion = ((TGeoBBox*) volMagRegion->GetShape())->GetDZ() * 2.; //n.d.r. DZ is the semidimension 
-        //volMagRegion->AddNode(volTarget,1,new TGeoTranslation(0,0, -ZDimension/2));
-       for (int i = 0; i < fNTarget; i++){
-        volMagRegion->AddNode(volTarget,i+1,new TGeoTranslation(0,0, -ZDimMagnetizedRegion/2 + ZDimension/2. + i*(ZDimension + 3 * fHpTDZ + 2* fHpTDistance)));
- //       volMagRegion->AddNode(volTarget,2,new TGeoTranslation(0,0, -ZDimMagnetizedRegion/2 + ZDimension + 119 * cm + ZDimension/2.));
+        for (int i = 0; i < fNTarget; i++){
+         volMagRegion->AddNode(volTarget,i+1,new TGeoTranslation(0,0, -ZDimMagnetizedRegion/2 + ZDimension/2. + i*(ZDimension + 3 * fHpTDZ + 2* fHpTDistance)));
         }
        }
     }
@@ -455,6 +453,7 @@ void Target::ConstructGeometry()
       for(int l = 0; l < fNWall; l++)
 	{
 	  volTarget->AddNode(volWall,l,new TGeoTranslation(0, 0, d_cl_z +CellWidth/2));
+        
 	  //6 cm is the distance between 2 columns of consecutive Target for TT placement
 	  d_cl_z += CellWidth + TTrackerZ;
 	}

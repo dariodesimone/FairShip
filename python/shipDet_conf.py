@@ -194,6 +194,8 @@ def configure(run,ship_geo):
    taumuondetector.SetNRpcInArm(ship_geo.tauMudet.NRpc)
    taumuondetector.SetPillarDimensions(ship_geo.tauMudet.PillarX,ship_geo.tauMudet.PillarY, ship_geo.tauMudet.PillarZ)
    detectorList.append(taumuondetector)
+   if ship_geo.nuTauTargetDesign==3: 
+    shiptaumuondetector.SetRpcDimDifferences(ship_geo.tauMudet.deltax, ship_geo.tauMudet.deltay);
    if ship_geo.nuTauTargetDesign<3:
     taumuondetector.SetReturnYokeDimensions(ship_geo.tauMudet.XRyoke,ship_geo.tauMudet.YRyoke, ship_geo.tauMudet.ZRyoke)
     taumuondetector.SetSmallerYokeDimensions(ship_geo.tauMudet.XRyoke_s,ship_geo.tauMudet.YRyoke_s, ship_geo.tauMudet.ZRyoke_s)
@@ -228,7 +230,9 @@ def configure(run,ship_geo):
     NuTauTarget.SetCenterZ(ship_geo.NuTauTarget.zC)
    if ship_geo.nuTauTargetDesign==3:
     NuTauTarget.SetCenterZ(ship_geo.EmuMagnet.zC) #now the centers of emumagnet and nutautarget are different (target does not include HPT)
-   NuTauTarget.SetNumberBricks(ship_geo.NuTauTarget.col,ship_geo.NuTauTarget.row,ship_geo.NuTauTarget.wall) 
+    NuTauTarget.SetNumberTargets(ship_geo.NuTauTarget.target)
+    NuTauTarget.SetHpTParam(ship_geo.tauHPT.nHPT, ship_geo.tauHPT.distHPT, ship_geo.tauHPT.DZ) 
+   NuTauTarget.SetNumberBricks(ship_geo.NuTauTarget.col,ship_geo.NuTauTarget.row,ship_geo.NuTauTarget.wall)
    NuTauTarget.SetDetectorDimension(ship_geo.NuTauTarget.xdim, ship_geo.NuTauTarget.ydim, ship_geo.NuTauTarget.zdim)
    NuTauTarget.SetEmulsionParam(ship_geo.NuTauTarget.EmTh, ship_geo.NuTauTarget.EmX, ship_geo.NuTauTarget.EmY, ship_geo.NuTauTarget.PBTh,ship_geo.NuTauTarget.EPlW, ship_geo.NuTauTarget.LeadTh, ship_geo.NuTauTarget.AllPW)
    NuTauTarget.SetBrickParam(ship_geo.NuTauTarget.BrX, ship_geo.NuTauTarget.BrY, ship_geo.NuTauTarget.BrZ, ship_geo.NuTauTarget.BrPackX, ship_geo.NuTauTarget.BrPackY, ship_geo.NuTauTarget.BrPackZ)
@@ -267,6 +271,9 @@ def configure(run,ship_geo):
    if ship_geo.nuTauTargetDesign==3:
     tauHpt.SetHPTNumber(ship_geo.tauHPT.nHPT)
     tauHpt.SetDistanceHPTs(ship_geo.tauHPT.distHPT)
+    tauHpt.SetSurroundingDetHeight(ship_geo.tauHPT.SRDY)
+    tauHpt.GetMagnetGeometry(ship_geo.EmuMagnet.zC, ship_geo.EmuMagnet.Y)
+    tauHpt.GetNumberofTargets(ship_geo.NuTauTarget.target)
    detectorList.append(tauHpt)
 
  # for backward compatibility

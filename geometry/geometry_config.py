@@ -15,7 +15,7 @@ if "muShieldDesign" not in globals():
 if "muShieldGeo" not in globals():
     muShieldGeo = None
 if "nuTargetPassive" not in globals():
-    nuTargetPassive = 0
+    nuTargetPassive = 1
 if "nuTauTargetDesign" not in globals():
     nuTauTargetDesign = 0
     if muShieldDesign >= 7: 
@@ -561,6 +561,8 @@ with ConfigRegistry.register_config("basic") as c:
     	c.tauMudet.NRpc= 23
         c.tauMudet.Xtot = scaleMudet*2.170627*u.m #same dimensions as Thomas' veto box
         c.tauMudet.Ytot = scaleMudet*4.9124968*u.m
+        c.tauMudet.deltax = 10* u.cm
+        c.tauMudet.deltay = 20* u.cm
         c.tauMudet.XFe = c.tauMudet.Xtot
         c.tauMudet.YFe = c.tauMudet.Ytot
         c.tauMudet.ZFe = 5.*u.cm
@@ -610,7 +612,6 @@ with ConfigRegistry.register_config("basic") as c:
         c.NuTauTarget.row=14
         c.NuTauTarget.col=6
         c.NuTauTarget.wall=11
-        c.NuTauTarget.target=1
     if c.NuTauTarget.Design == 2: #NEW with NO magnet
         c.NuTauTarget.row=20
         c.NuTauTarget.col=9
@@ -663,11 +664,10 @@ with ConfigRegistry.register_config("basic") as c:
         c.tauHPT.ConcreteY = c.tauMudet.Ytot/2 - c.tauHPT.DY/2
         c.tauHPT.ConcreteZ = c.tauHPT.DZ
     if nuTauTargetDesign==3:
-        c.tauHPT.DX = c.NuTauTarget.xdim;
-        c.tauHPT.SRDY = 10 *u.cm       
+        c.tauHPT.SRDY = 10 *u.cm  #additional detectors for improving acceptance
+        c.tauHPT.DX = c.NuTauTarget.xdim;      
         c.tauHPT.DY = c.EmuMagnet.Height2 - 2 *c.tauHPT.SRDY
-        c.tauHPT.DZ = c.NuTauTT.TTZ
-        #c.tauHPT.nHPT = 5
+        c.tauHPT.DZ = c.NuTauTT.TTZ        
         c.tauHPT.nHPT = 3 #n.d.r. number after each neutrino target
         c.tauHPT.distHPT = 25*u.cm
     
